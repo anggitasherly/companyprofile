@@ -1,6 +1,8 @@
 "use client"
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 import {
   Card,
@@ -11,7 +13,7 @@ import {
 import { useFavorite } from "@/context/FavoriteContext";
 
 export default function UserCard({ user }) {
-  const { isFavorite, toggleFavorite } = useFavorite();
+  const { isFavorite, addFavorite, removeFavorite } = useFavorite();
   const favorited = isFavorite(user.id);
 
   const initials = user.name
@@ -40,20 +42,27 @@ export default function UserCard({ user }) {
         </p>
 
         <div className="mt-4 flex gap-2">
-          <Button className="flex-1 rounded-full">View Profile</Button>
+          <a
+            href={`https://jsonplaceholder.typicode.com/users/${user.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants(), "flex-1 rounded-full")}
+          >
+            View Profile
+          </a>
 
           <Button
-            onClick={() => toggleFavorite(user)}
-            variant="outline"
-            size="icon"
+            variant={favorited ? "secondary" : "outline"}
             className="rounded-full"
-            aria-label={
-              favorited ? "Remove from Favourite" : "Add to Favourite"
+            aria-pressed={favorited}
+            onClick={() =>
+              favorited ? removeFavorite(user.id) : addFavorite(user)
             }
           >
             <Heart
               className={favorited ? "fill-red-500 text-red-500" : ""}
             />
+            {favorited ? "Favourite" : "Add Favourite"}
           </Button>
         </div>
       </CardContent>
