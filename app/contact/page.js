@@ -154,11 +154,6 @@ async function handleSubmit(event) {
                   </Button>
                 </form>
               )}
-              <div className="mt-6 rounded-lg bg-muted p-6">
-                <p>Name: {name}</p>
-                <p>Email: {email}</p>
-                <p>Message: {message}</p>
-              </div>
             </CardContent>
           </Card>
         </div>
