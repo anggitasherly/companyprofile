@@ -25,10 +25,15 @@ export default function FavoritesPage() {
 
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {favorites.length > 0 ? (
-            favorites.map((user) => (
+            favorites.map((fav) => (
               <UserCard
-                key={user.id}
-                user={user}
+                key={fav.id}
+                user={{
+                  id: fav.id,
+                  name: fav.name,
+                  email: fav.email,
+                  company: { name: fav.company_name },
+                }}
               />
             ))
           ) : (
