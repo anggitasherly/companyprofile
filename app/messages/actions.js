@@ -1,20 +1,25 @@
 "use server"; // semua fungsi yang diexport dari file ini adalah Server Action
 
-import { messages } from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
 export async function deleteMessageAction(id) {
-    const index = messages.findIndex((msg) => msg.id === id);
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const message = formData.get("message");
     //Cari posisi (index) pesan yang id-nya cocok sama id yang dikirim. Kalau gak ketemu, hasilnya -1
 
-    if (index === -1) {
-        return{success:false, error: "Pesan tidak ditemukan"};
+    if (!name || !email || !message) {
+    return { success: false, error: "Semua field wajib diisi." };
     }
-    //Kalau gak ketemu, langsung berhenti, balikin status gagal.
 
-    messages.splice(index, 1);
-    //dari posisi index, hapus 1 elemen. 
-    // Ini langsung ngubah isi array messages yang di-import dari lib/db.js (soalnya array itu "nempel" di memory, bukan di-copy pas di-import).
+    const { error } = await supabase
+        .from("messages")
+        .insert({ name, email, message });
+
+    if (error) {
+        return { success: false, error: error.message };
+    }
 
     revalidatePath("/messages");
     //kasih tau Next.js: "halaman /messages datanya udah berubah, buang cache-nya, render ulang pas ada yang akses lagi". 
